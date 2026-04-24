@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(pageTitle)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Pixel Vault</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <nav th:fragment="navbar(isLoggedIn, username)" class="glass-nav">
+        <div class="nav-brand">
+            <a th:href="@{/}"><h2>Pixel<span>Vault</span></h2></a>
+        </div>
+        <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
+            <a th:href="@{/}">Store</a>
+            <th:block th:if="${isLoggedIn}">
+                <a th:href="@{/cart}">🛒 Cart</a>
+                <span class="user-badge" th:text="${username}">User</span>
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-outline">Logout</button>
+                </form>
+            </th:block>
+            <th:block th:unless="${isLoggedIn}">
+                <a th:href="@{/login}" class="btn btn-primary">Login</a>
+                <a th:href="@{/register}" class="btn btn-outline">Register</a>
+            </th:block>
+        </div>
+    </nav>
+</body>
+</html>

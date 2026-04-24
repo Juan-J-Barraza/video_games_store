@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Pixel Vault | Store')}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar(${isLoggedIn}, ${username})}"></nav>
+
+    <main class="container">
+        <div class="hero-section text-center">
+            <h1 class="gradient-text">Discover Your Next Adventure</h1>
+            <p>Explore our curated collection of premium titles.</p>
+        </div>
+
+        <div th:if="${param.success}" class="alert alert-success">
+            Order placed successfully! Enjoy your new games.
+        </div>
+
+        <div class="games-grid">
+            <div th:each="game : ${games}" class="game-card glass-card">
+                <div class="game-image" th:style="'background-image: url(' + ${game.imageUrl} + ')'">
+                    <div class="stock-badge" th:if="${game.stock > 0}" th:text="'In Stock: ' + ${game.stock}">In Stock</div>
+                    <div class="stock-badge out-of-stock" th:if="${game.stock == 0}">Out of Stock</div>
+                </div>
+                <div class="game-details">
+                    <h3 th:text="${game.title}">Game Title</h3>
+                    <p class="game-desc" th:text="${game.description}">Game Description</p>
+                    <div class="game-footer">
+                        <span class="game-price" th:text="'$' + ${game.price}">$59.99</span>
+                        <form th:if="${isLoggedIn}" th:action="@{/cart/add}" method="post">
+                            <input type="hidden" name="gameId" th:value="${game.id}" />
+                            <button type="submit" class="btn btn-primary" th:disabled="${game.stock == 0}">
+                                Add to Cart
+                            </button>
+                        </form>
+                        <a th:unless="${isLoggedIn}" th:href="@{/login}" class="btn btn-outline">Log in to Buy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Your Cart - Pixel Vault')}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar(${isLoggedIn}, ${username})}"></nav>
+
+    <main class="container cart-container">
+        <h1 class="gradient-text">Your Shopping Cart</h1>
+
+        <div th:if="${param.error}" class="alert alert-danger" th:text="${param.error}">
+            An error occurred.
+        </div>
+
+        <div th:if="${cart.items.isEmpty()}" class="empty-cart glass-card text-center">
+            <h2>Your cart is empty.</h2>
+            <p>Looks like you haven't added any games yet.</p>
+            <a th:href="@{/}" class="btn btn-primary mt-4">Browse Store</a>
+        </div>
+
+        <div th:unless="${cart.items.isEmpty()}" class="cart-content">
+            <div class="cart-items">
+                <div th:each="item : ${cart.items}" class="cart-item glass-card">
+                    <div class="item-img" th:style="'background-image: url(' + ${item.game.imageUrl} + ')'"></div>
+                    <div class="item-info">
+                        <h3 th:text="${item.game.title}">Game Title</h3>
+                        <p th:text="'Quantity: ' + ${item.quantity}">Quantity: 1</p>
+                    </div>
+                    <div class="item-actions">
+                        <span class="item-price" th:text="'$' + ${item.game.price}">$59.99</span>
+                        <form th:action="@{/cart/remove}" method="post">
+                            <input type="hidden" name="gameId" th:value="${item.game.id}" />
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cart-summary glass-card">
+                <h3>Order Summary</h3>
+                <div class="summary-details">
+                    <p>Subtotal <span th:text="'$' + ${cartTotal}">$0.00</span></p>
+                    <hr>
+                    <p class="total">Total <span class="gradient-text" th:text="'$' + ${cartTotal}">$0.00</span></p>
+                </div>
+                <form th:action="@{/checkout}" method="post">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg mt-4">Simulate Checkout</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>
